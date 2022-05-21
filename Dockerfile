@@ -21,6 +21,10 @@ RUN pip3 install awscli boto3
 COPY ./latch-base/in_container.mk /root/Makefile
 COPY ./latch-base/flytekit.config /root
 
+COPY ./lyteidl /root/flyteidl
+RUN cd /root/flyteidl &&\ 
+  pip install -e .
+
 COPY ./lyte/lytekit /root/lytekit
 RUN cd /root/lytekit &&\
   python3 -m pip install -e .
