@@ -24,7 +24,7 @@ docker-push:
 dbnp: docker-build docker-push
 
 docker-build-cuda:
-  docker build -t {{docker_registry}}/{{docker_image_name_cuda}}:{{docker_image_version}} -f Dockerfile-cuda ..
+  docker build -t {{docker_registry}}/{{docker_image_name_cuda}}:{{docker_image_version}} -f Dockerfile-cuda .
 
 docker-push-cuda:
   docker push {{docker_registry}}/{{docker_image_name_cuda}}:{{docker_image_version}}
@@ -32,7 +32,7 @@ docker-push-cuda:
 dbnp-cuda: docker-build-cuda docker-push-cuda
 
 docker-build-opencl:
-  docker build -t {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}} -f Dockerfile-opencl ..
+  docker build -t {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}} -f Dockerfile-opencl .
 
 docker-push-opencl:
   docker push {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}}
