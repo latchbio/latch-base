@@ -22,3 +22,8 @@ COPY ./latch-base/in_container.mk /root/Makefile
 COPY ./latch-base/flytekit.config /root
 
 RUN python3 -m pip install lytekit lytekitplugins-pods
+
+# Grab custom flytectl from builder image
+COPY --from=lytectl /artifacts/flytectl /bin/flytectl
+RUN /bin/flytectl --help
+
