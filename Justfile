@@ -13,7 +13,7 @@ docker_image_version := git_hash + "-" + git_branch
 
 
 docker-build:
-  docker build -t {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}} -f Dockerfile ..
+  docker build -t {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}} -f Dockerfile .
 
 docker-push:
   docker push {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}}
