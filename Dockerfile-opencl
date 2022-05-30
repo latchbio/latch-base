@@ -1,9 +1,6 @@
 FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
-FROM python:3.9-slim-buster
 
-# Grab custom flytectl from builder image
-COPY --from=lytectl /artifacts/flytectl /bin/flytectl
-RUN /bin/flytectl --help
+FROM nvidia/opencl:runtime-ubuntu18.04
 
 WORKDIR /root
 ENV VENV /opt/venv
@@ -21,7 +18,7 @@ RUN pip3 install awscli boto3
 COPY ./latch-base/in_container.mk /root/Makefile
 COPY ./latch-base/flytekit.config /root
 
-RUN python3 -m pip install lytekit lytekitplugins-pods
+RUN python3 -m pip install lytekit==0.2.0 lytekitplugins-pods==0.2.0
 
 # Grab custom flytectl from builder image
 COPY --from=lytectl /artifacts/flytectl /bin/flytectl
