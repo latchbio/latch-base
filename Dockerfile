@@ -20,8 +20,4 @@ RUN pip3 install awscli boto3
 COPY in_container.mk /root/Makefile
 COPY flytekit.config /root/flytekit.config
 
-COPY ./latch-base/in_container.mk /root/Makefile
-COPY ./latch-base/flytekit.config /root
-
 RUN python3 -m pip install lytekit==0.2.0 lytekitplugins-pods==0.2.0
-
