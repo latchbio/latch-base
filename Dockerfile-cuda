@@ -1,0 +1,32 @@
+FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
+
+FROM nvidia/cuda:11.4.2-cudnn8-devel-ubuntu20.04
+
+WORKDIR /root
+ENV VENV /opt/venv
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV PYTHONPATH /root
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev ffmpeg build-essential curl libz-dev git-all zip
+
+RUN apt-get install -y software-properties-common &&\
+    add-apt-repository -y ppa:deadsnakes/ppa &&\
+    apt-get install -y python3.8 python3-pip python3.8-distutils
+
+RUN  python3.8 -m pip install --upgrade pip
+
+# Install the AWS cli separately to prevent issues with boto being written over
+RUN python3.8 -m pip install awscli
+
+COPY ./latch-base/in_container.mk /root/Makefile
+COPY ./latch-base/flytekit.config /root
+
+RUN python3 -m pip install lytekit lytekitplugins-pods
+
+# Grab custom flytectl from builder image
+COPY --from=lytectl /artifacts/flytectl /bin/flytectl
+RUN /bin/flytectl --help
+
+

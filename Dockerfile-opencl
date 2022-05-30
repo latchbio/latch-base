@@ -1,4 +1,4 @@
-FOM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
+FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
 FROM python:3.9-slim-buster
 
 # Grab custom flytectl from builder image
@@ -22,4 +22,3 @@ COPY ./latch-base/in_container.mk /root/Makefile
 COPY ./latch-base/flytekit.config /root
 
 RUN python3 -m pip install lytekit lytekitplugins-pods
-
