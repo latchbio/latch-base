@@ -12,13 +12,12 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONPATH /root
 ENV LATCH_AUTHENTICATION_ENDPOINT https://nucleus.latch.bio
 
-RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev ffmpeg build-essential curl libz-dev git-all zip
+RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-essential
 
 # Install the AWS cli separately to prevent issues with boto being written over
 RUN pip3 install awscli boto3
 
+COPY in_container.mk /root/Makefile
+COPY flytekit.config /root/flytekit.config
 
-COPY ./latch-base/in_container.mk /root/Makefile
-COPY ./latch-base/flytekit.config /root
-
-RUN python3 -m pip install lytekit lytekitplugins-pods
+RUN python3 -m pip install lytekit==0.2.0 lytekitplugins-pods==0.2.0
