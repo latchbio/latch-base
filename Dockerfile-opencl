@@ -12,7 +12,7 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONPATH /root
 ENV LATCH_AUTHENTICATION_ENDPOINT https://nucleus.latch.bio
 
-RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-essential
+RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-essential procps
 
 RUN apt-get install -y software-properties-common &&\
     add-apt-repository -y ppa:deadsnakes/ppa &&\
@@ -23,6 +23,3 @@ RUN python3 -m pip install awscli boto3
 
 COPY in_container.mk /root/Makefile
 COPY flytekit.config /root
-
-RUN python3.8 -m pip install --upgrade pip
-RUN python3.8 -m pip install lytekit==0.2.0 lytekitplugins-pods==0.2.0
