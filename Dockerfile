@@ -1,5 +1,4 @@
-FOM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
-FROM python:3.9-slim-buster
+FROM python:3.10-slim-bullseye
 
 # Grab custom flytectl from builder image
 COPY --from=lytectl /artifacts/flytectl /bin/flytectl
