@@ -23,8 +23,9 @@ RUN  python3.9 -m pip install --upgrade pip
 # Install the AWS cli separately to prevent issues with boto being written over
 RUN python3.9 -m pip install awscli
 
+RUN apt-get update && apt-get install -y curl
 # s5 gives better file upload and download performance than awscli.
-RUN wget https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz &&\
+RUN curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -o s5cmd_2.0.0_Linux-64bit.tar.gz &&\
     tar -xzvf s5cmd_2.0.0_Linux-64bit.tar.gz &&\
     mv s5cmd /bin/ &&\ 
     rm CHANGELOG.md LICENSE README.md
