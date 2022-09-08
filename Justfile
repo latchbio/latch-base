@@ -38,3 +38,5 @@ docker-push-opencl:
   docker push {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}}
 
 dbnp-opencl: docker-build-opencl docker-push-opencl
+
+dbnp-all: dbnp dbnp-cuda dbnp-opencl
