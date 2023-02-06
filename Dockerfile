@@ -12,7 +12,7 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONPATH /root
 ENV LATCH_AUTHENTICATION_ENDPOINT https://nucleus.latch.bio
 
-RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-essential procps
+RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-essential procps rsync openssh-server
 
 # Install the AWS cli separately to prevent issues with boto being written over
 RUN pip3 install awscli boto3
