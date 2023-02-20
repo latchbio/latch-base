@@ -17,3 +17,8 @@ RUN add-apt-repository \
        bionic \
        stable"
 RUN apt-get update && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io
+
+# wrapper script to ensure that docker is running
+RUN mv /usr/bin/docker /usr/bin/_docker
+COPY scripts/docker.sh /usr/bin/docker
+RUN chmod u+x /usr/bin/docker
