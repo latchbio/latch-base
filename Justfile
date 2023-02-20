@@ -10,6 +10,7 @@ git_branch := `inp=$(git rev-parse --abbrev-ref HEAD); echo "${inp//\//--}"`
 docker_image_name := "latch-base"
 docker_image_name_cuda := "latch-base-cuda"
 docker_image_name_opencl := "latch-base-opencl"
+docker_image_name_docker := "latch-base-docker"
 
 docker_registry := "812206152185.dkr.ecr.us-west-2.amazonaws.com"
 docker_image_version := git_hash + "-" + git_branch
@@ -39,4 +40,12 @@ docker-push-opencl:
 
 dbnp-opencl: docker-build-opencl docker-push-opencl
 
-dbnp-all: dbnp dbnp-cuda dbnp-opencl
+docker-build-docker:
+  docker build --build-arg latch_base_tag={{docker_image_version}} -t {{docker_registry}}/{{docker_image_name_docker}}:{{docker_image_version}} -f Dockerfile-docker .
+
+docker-push-docker:
+  docker push {{docker_registry}}/{{docker_image_name_docker}}:{{docker_image_version}}
+
+dbnp-docker: docker-build-docker docker-push-docker
+
+dbnp-all: dbnp dbnp-cuda dbnp-opencl dbnp-docker

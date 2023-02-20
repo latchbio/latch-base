@@ -1,0 +1,19 @@
+ARG latch_base_tag=latest
+
+FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/latch-base:${latch_base_tag}
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+       apt-transport-https \
+       ca-certificates \
+       curl \
+       gnupg-agent \
+       gnupg2 \
+       software-properties-common
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN apt-key fingerprint 0EBFCD88
+
+RUN add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       bionic \
+       stable"
+RUN apt-get update && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io
