@@ -46,6 +46,6 @@ docker-build-docker:
 docker-push-docker:
   docker push {{docker_registry}}/{{docker_image_name_docker}}:{{docker_image_version}}
 
-dbnp-docker: docker-build-docker docker-push-docker
+dbnp-docker: dbnp docker-build-docker docker-push-docker
 
 dbnp-all: dbnp dbnp-cuda dbnp-opencl dbnp-docker
