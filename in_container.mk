@@ -11,6 +11,10 @@ $(SERIALIZED_PB_OUTPUT_DIR): clean
 serialize: $(SERIALIZED_PB_OUTPUT_DIR)
 	pyflyte --config /root/flytekit.config serialize workflows -f $(SERIALIZED_PB_OUTPUT_DIR)
 
+.PHONY: snakemake-serialize
+snakemake-serialize: $(SERIALIZED_PB_OUTPUT_DIR)
+	latch serialize ${PKG_ROOT} $(SERIALIZED_PB_OUTPUT_DIR)
+
 .PHONY: register
 register: serialize
 	flytectl register file --admin.clientId ${FLYTE_CLIENT_ID} --admin.clientSecretLocation ${FLYTE_SECRET_PATH} --admin.endpoint ${FLYTE_ADMIN_ENDPOINT} --admin.insecure -p ${PROJECT} -d development --version ${VERSION} $(SERIALIZED_PB_OUTPUT_DIR)/*
