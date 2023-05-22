@@ -13,7 +13,7 @@ serialize: $(SERIALIZED_PB_OUTPUT_DIR)
 
 .PHONY: snakemake-serialize
 snakemake-serialize: $(SERIALIZED_PB_OUTPUT_DIR)
-	latch serialize ${PKG_ROOT} $(SERIALIZED_PB_OUTPUT_DIR)
+	latch serialize /root $(SERIALIZED_PB_OUTPUT_DIR)
 
 .PHONY: register
 register: serialize
