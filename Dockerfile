@@ -40,8 +40,10 @@ RUN apt-key fingerprint 0EBFCD88
 RUN add-apt-repository \
        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
        bionic \
-       stable"
-RUN apt-get update && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io
+       pool \
+       stable \
+       amd64"
+RUN apt-get update && apt-get install --no-install-recommends -y docker-ce=23.0.6 docker-ce-cli=23.0.6 containerd.io
 
 # wrapper script to ensure that docker is running
 RUN mv /usr/bin/docker /usr/bin/_docker
