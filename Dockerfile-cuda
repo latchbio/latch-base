@@ -1,5 +1,5 @@
 FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
-FROM nvidia/cuda:11.4.2-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.4.3-cudnn8-devel-ubuntu20.04
 
 # Grab custom flytectl from builder image
 COPY --from=lytectl /artifacts/flytectl /bin/flytectl
@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y curl
 # s5 gives better file upload and download performance than awscli.
 RUN curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -o s5cmd_2.0.0_Linux-64bit.tar.gz &&\
     tar -xzvf s5cmd_2.0.0_Linux-64bit.tar.gz &&\
-    mv s5cmd /bin/ &&\ 
+    mv s5cmd /bin/ &&\
     rm CHANGELOG.md LICENSE README.md
 
 COPY in_container.mk /root/Makefile
