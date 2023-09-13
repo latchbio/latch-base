@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y curl
 # s5 gives better file upload and download performance than awscli.
 RUN curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -o s5cmd_2.0.0_Linux-64bit.tar.gz &&\
     tar -xzvf s5cmd_2.0.0_Linux-64bit.tar.gz &&\
-    mv s5cmd /bin/ &&\ 
+    mv s5cmd /bin/ &&\
     rm CHANGELOG.md LICENSE README.md
 
 COPY in_container.mk /root/Makefile
