@@ -1,5 +1,19 @@
+# syntax = docker/dockerfile:1.4.1
+
 FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
-FROM python:3.9-slim-bullseye
+FROM python:3.11-slim-bookworm
+
+shell [ \
+    "/usr/bin/env", "bash", \
+    "-o", "errexit", \
+    "-o", "pipefail", \
+    "-o", "nounset", \
+    "-o", "verbose", \
+    "-o", "errtrace", \
+    "-O", "inherit_errexit", \
+    "-O", "shift_verbose", \
+    "-c" \
+]
 
 # Grab custom flytectl from builder image
 COPY --from=lytectl /artifacts/flytectl /bin/flytectl
@@ -28,20 +42,31 @@ COPY in_container.mk /root/Makefile
 COPY flytekit.config /root/flytekit.config
 
 # Docker support
-RUN apt-get update && apt-get install --no-install-recommends -y \
-       apt-transport-https \
-       ca-certificates \
-       gnupg-agent \
-       gnupg2 \
-       software-properties-common
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-RUN apt-key fingerprint 0EBFCD88
 
-RUN add-apt-repository \
-       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-       bionic \
-       stable"
-RUN apt-get update && apt-get install --no-install-recommends -y docker-ce=5:23.0.6-1~ubuntu.18.04~bionic docker-ce-cli=5:23.0.6-1~ubuntu.18.04~bionic containerd.io
+run <<'DOCKER'
+    apt-get update
+    apt-get install --no-install-recommends -y ca-certificates
+
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    chmod a+r /etc/apt/keyrings/docker.asc
+
+    arch=$(dpkg --print-architecture)
+    codename=$(. /etc/os-release && echo "$VERSION_CODENAME")
+
+    echo \
+        "deb [arch=$(echo $arch) signed-by=/etc/apt/keyrings/docker.asc] \
+            https://download.docker.com/linux/debian \
+            $(echo $codename) \
+            stable" | \
+        tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    apt-get update
+    apt-get install --no-install-recommends -y \
+        docker-ce=5:26.1.0-1~debian.12~bookworm \
+        docker-ce-cli=5:26.1.0-1~debian.12~bookworm \
+        containerd.io
+DOCKER
 
 # wrapper script to ensure that docker is running
 RUN mv /usr/bin/docker /usr/bin/_docker
