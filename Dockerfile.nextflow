@@ -1,0 +1,22 @@
+from 812206152185.dkr.ecr.us-west-2.amazonaws.com/latch-base:cb86-main
+
+arg nextflow_version
+
+run <<deps
+    apt-get update
+    apt-get install -y default-jre-headless # OpenJDK 17.0.11
+deps
+
+run <<download
+    download_dir="https://latch-public.s3.us-west-2.amazonaws.com/nextflow-v2/${nextflow_version}"
+
+    curl -sSL $download_dir/nextflow.tar.gz -o /root/nextflow.tar.gz
+    curl -sSL $download_dir/nextflow -o /root/nextflow
+
+    tar -xvzf /root/nextflow.tar.gz
+    chmod +x /root/nextflow
+
+    # downloads nextflow java deps
+    /root/nextflow
+download
+
