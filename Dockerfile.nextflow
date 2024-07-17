@@ -13,7 +13,7 @@ run <<download
     curl -sSL $download_dir/nextflow.tar.gz -o /root/nextflow.tar.gz
     tar -xvzf /root/nextflow.tar.gz
 
-    cp /root/.nextflow/nextflow /root/nextflow
+    curl -sSL $download_dir/nextflow -o /root/nextflow
     chmod +x /root/nextflow
 
     # downloads nextflow java deps
