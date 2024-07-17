@@ -12,7 +12,7 @@ docker_image_name_cuda := "latch-base-cuda"
 docker_image_name_opencl := "latch-base-opencl"
 
 docker_image_name_nextflow := "latch-base-nextflow"
-docker_image_version_nextflow := env_var_or_default("LATCH_NEXTFLOW_VERSION", "v1.1.4")
+docker_image_version_nextflow := env_var_or_default("LATCH_NEXTFLOW_VERSION", "v1.1.5")
 
 docker_registry := "812206152185.dkr.ecr.us-west-2.amazonaws.com"
 docker_image_version := git_hash + "-" + git_branch
@@ -41,7 +41,7 @@ docker-push-opencl:
   docker push {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}}
 
 docker-build-nextflow:
-  docker build -t {{docker_registry}}/{{docker_image_name_nextflow}}:{{docker_image_version_nextflow}} --build-arg="nextflow_version={{docker_image_version_nextflow}}" -f Dockerfile.nextflow .
+  docker build --platform linux/amd64 -t {{docker_registry}}/{{docker_image_name_nextflow}}:{{docker_image_version_nextflow}} --build-arg="nextflow_version={{docker_image_version_nextflow}}" -f Dockerfile.nextflow .
 
 docker-push-nextflow:
   docker push {{docker_registry}}/{{docker_image_name_nextflow}}:{{docker_image_version_nextflow}}
