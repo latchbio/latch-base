@@ -12,7 +12,7 @@ docker_image_name_cuda := "latch-base-cuda"
 docker_image_name_opencl := "latch-base-opencl"
 
 docker_image_name_nextflow := "latch-base-nextflow"
-docker_image_version_nextflow := env_var_or_default("LATCH_NEXTFLOW_VERSION", "v1.1.3")
+docker_image_version_nextflow := env_var_or_default("LATCH_NEXTFLOW_VERSION", "v1.1.4")
 
 docker_registry := "812206152185.dkr.ecr.us-west-2.amazonaws.com"
 docker_image_version := git_hash + "-" + git_branch

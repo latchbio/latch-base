@@ -11,9 +11,9 @@ run <<download
     download_dir="https://latch-public.s3.us-west-2.amazonaws.com/nextflow-v2/${nextflow_version}"
 
     curl -sSL $download_dir/nextflow.tar.gz -o /root/nextflow.tar.gz
-    curl -sSL $download_dir/nextflow -o /root/nextflow
-
     tar -xvzf /root/nextflow.tar.gz
+
+    cp /root/.nextflow/nextflow /root/nextflow
     chmod +x /root/nextflow
 
     # downloads nextflow java deps
