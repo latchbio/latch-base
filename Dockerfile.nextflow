@@ -8,8 +8,8 @@ run <<deps
 deps
 
 run <<download
-    nextflow_v2_dir="https://latch-public.s3.us-west-2.amazonaws.com/nextflow-v2/"
-    download_dir="${nextflow_dir}/${nextflow_version}"
+    nextflow_v2_dir="https://latch-public.s3.us-west-2.amazonaws.com/nextflow-v2"
+    download_dir="${nextflow_v2_dir}/${nextflow_version}"
 
     curl -sSL $download_dir/nextflow.tar.gz -o /root/nextflow.tar.gz
     tar -xvzf /root/nextflow.tar.gz
