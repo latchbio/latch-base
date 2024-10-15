@@ -8,13 +8,17 @@ run <<deps
 deps
 
 run <<download
-    download_dir="https://latch-public.s3.us-west-2.amazonaws.com/nextflow-v2/${nextflow_version}"
+    nextflow_v2_dir="https://latch-public.s3.us-west-2.amazonaws.com/nextflow-v2/"
+    download_dir="${nextflow_dir}/${nextflow_version}"
 
     curl -sSL $download_dir/nextflow.tar.gz -o /root/nextflow.tar.gz
     tar -xvzf /root/nextflow.tar.gz
 
     curl -sSL $download_dir/nextflow -o /root/nextflow
     chmod +x /root/nextflow
+
+    curl -sSL $nextflow_v2_dir/custom_fsync -o /root/custom_fsync
+    chmod +x /root/custom_fsync
 
     # downloads nextflow java deps
     /root/nextflow
