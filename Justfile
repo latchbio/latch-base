@@ -17,6 +17,9 @@ docker_image_version_nextflow := env_var_or_default("LATCH_NEXTFLOW_VERSION", "v
 docker_registry := "812206152185.dkr.ecr.us-west-2.amazonaws.com"
 docker_image_version := git_hash + "-" + git_branch
 
+@docker-login:
+  aws ecr get-login-password --region us-west-2 | \
+    docker login --username AWS --password-stdin {{docker_registry}}
 
 docker-build:
   docker build -t {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}} -f Dockerfile .
