@@ -4,7 +4,7 @@ set positional-arguments
 @default:
   just --list --unsorted
 
-git_hash := `git rev-parse --short=6 HEAD`
+git_hash := `git rev-parse --short=4 HEAD`
 git_branch := `inp=$(git rev-parse --abbrev-ref HEAD); echo "${inp//\//--}"`
 
 docker_image_name := "latch-base"
