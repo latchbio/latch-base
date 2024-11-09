@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-es
 
 # Install the AWS cli separately to prevent issues with boto being written over
 RUN pip3 install awscli boto3
+ENV AWS_USE_DUALSTACK_ENDPOINT true
 
 RUN apt-get update && apt-get install -y curl
 # s5 gives better file upload and download performance than awscli.

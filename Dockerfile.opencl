@@ -20,6 +20,7 @@ RUN apt-get install -y software-properties-common &&\
 
 # Install the AWS cli separately to prevent issues with boto being written over
 RUN python3 -m pip install awscli boto3
+ENV AWS_USE_DUALSTACK_ENDPOINT true
 
 RUN apt-get update && apt-get install -y curl
 # s5 gives better file upload and download performance than awscli.

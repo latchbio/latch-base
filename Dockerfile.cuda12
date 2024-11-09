@@ -43,6 +43,7 @@ run  python3.11 -m pip install --upgrade pip
 
 # Install the AWS cli separately to prevent issues with boto being written over
 run python3.11 -m pip install awscli
+ENV AWS_USE_DUALSTACK_ENDPOINT true
 
 run apt-get update && apt-get install -y curl
 # s5 gives better file upload and download performance than awscli.
