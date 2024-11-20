@@ -1,4 +1,5 @@
 SERIALIZED_PB_OUTPUT_DIR := /tmp/output
+PACKAGES_TO_SERIALIZE ?= "wf"
 
 .PHONY: clean
 clean:
@@ -9,7 +10,7 @@ $(SERIALIZED_PB_OUTPUT_DIR): clean
 
 .PHONY: serialize
 serialize: $(SERIALIZED_PB_OUTPUT_DIR)
-	pyflyte --config /root/flytekit.config --pkgs ${PACKAGES_TO_SERIALIZE:-wf} serialize workflows -f $(SERIALIZED_PB_OUTPUT_DIR)
+	pyflyte --config /root/flytekit.config --pkgs $(PACKAGES_TO_SERIALIZE) serialize workflows -f $(SERIALIZED_PB_OUTPUT_DIR)
 
 .PHONY: register
 register: serialize
