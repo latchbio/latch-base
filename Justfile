@@ -25,7 +25,7 @@ platform := "linux/amd64"
     docker login --username AWS --password-stdin {{docker_registry}}
 
 docker-build:
-  docker build -t {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}} -f Dockerfile .
+  docker build --platform linux/amd64 -t {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}} -f Dockerfile .
 
 docker-push:
   docker push {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}}
