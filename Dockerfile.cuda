@@ -1,34 +1,45 @@
-FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+from 812206152185.dkr.ecr.us-west-2.amazonaws.com/lytectl:lytectl-8f17-master as lytectl
+from nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 
 # Grab custom flytectl from builder image
-COPY --from=lytectl /artifacts/flytectl /bin/flytectl
-RUN /bin/flytectl --help
+copy --from=lytectl /artifacts/flytectl /bin/flytectl
 
-WORKDIR /root
-ENV VENV /opt/venv
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
-ENV PYTHONPATH /root
-ENV DEBIAN_FRONTEND=noninteractive
+workdir /root
+env VENV /opt/venv
+env LANG C.UTF-8
+env LC_ALL C.UTF-8
+env PYTHONPATH /root
+env DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-essential procps rsync openssh-server
+run apt-get update && \
+    apt-get install -y \
+        software-properties-common \
+        libsm6 \
+        libxext6 \
+        libxrender-dev \
+        build-essential \
+        procps \
+        rsync \
+        openssh-server \
+        curl
 
-RUN apt-get install -y software-properties-common &&\
-    add-apt-repository -y ppa:deadsnakes/ppa &&\
-    apt-get install -y python3.9 python3-pip python3.9-distutils
+run add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt-get install -y \
+        python3.11 \
+        python3.11-distutils \
+        python3.11-dev \
+        python3-pip
 
-RUN  python3.9 -m pip install --upgrade pip
+run python3.11 -m pip install --upgrade pip
 
 # Install the AWS cli separately to prevent issues with boto being written over
-RUN python3.9 -m pip install awscli
+run python3.11 -m pip install awscli
 
-RUN apt-get update && apt-get install -y curl
-# s5 gives better file upload and download performance than awscli.
-RUN curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -o s5cmd_2.0.0_Linux-64bit.tar.gz &&\
-    tar -xzvf s5cmd_2.0.0_Linux-64bit.tar.gz &&\
-    mv s5cmd /bin/ &&\
+# s5cmd gives better file upload and download performance than awscli.
+run curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -o s5cmd_2.0.0_Linux-64bit.tar.gz && \
+    tar -xzvf s5cmd_2.0.0_Linux-64bit.tar.gz && \
+    mv s5cmd /bin/ && \
     rm CHANGELOG.md LICENSE README.md
 
-COPY in_container.mk /root/Makefile
-COPY flytekit.config /root
+copy in_container.mk /root/Makefile
+copy flytekit.config /root

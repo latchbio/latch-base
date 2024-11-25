@@ -22,7 +22,7 @@ docker_image_version := git_hash + "-" + git_branch
     docker login --username AWS --password-stdin {{docker_registry}}
 
 docker-build:
-  docker build -t {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}} -f Dockerfile .
+  docker build --platform linux/amd64 -t {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}} -f Dockerfile .
 
 docker-push:
   docker push {{docker_registry}}/{{docker_image_name}}:{{docker_image_version}}
@@ -30,7 +30,7 @@ docker-push:
 dbnp: docker-build docker-push
 
 docker-build-cuda:
-  docker build -t {{docker_registry}}/{{docker_image_name_cuda}}:{{docker_image_version}} -f Dockerfile.cuda .
+  docker build --platform linux/amd64 -t {{docker_registry}}/{{docker_image_name_cuda}}:{{docker_image_version}} -f Dockerfile.cuda .
 
 docker-push-cuda:
   docker push {{docker_registry}}/{{docker_image_name_cuda}}:{{docker_image_version}}
@@ -38,10 +38,12 @@ docker-push-cuda:
 dbnp-cuda: docker-build-cuda docker-push-cuda
 
 docker-build-opencl:
-  docker build -t {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}} -f Dockerfile.opencl .
+  docker build --platform linux/amd64 -t {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}} -f Dockerfile.opencl .
 
 docker-push-opencl:
   docker push {{docker_registry}}/{{docker_image_name_opencl}}:{{docker_image_version}}
+
+dbnp-opencl: docker-build-opencl docker-push-opencl
 
 docker-build-nextflow:
   docker build --platform linux/amd64 -t {{docker_registry}}/{{docker_image_name_nextflow}}:{{docker_image_version_nextflow}} --build-arg="nextflow_version={{docker_image_version_nextflow}}" -f Dockerfile.nextflow .
@@ -50,7 +52,5 @@ docker-push-nextflow:
   docker push {{docker_registry}}/{{docker_image_name_nextflow}}:{{docker_image_version_nextflow}}
 
 dbnp-nextflow: docker-build-nextflow docker-push-nextflow
-
-dbnp-opencl: docker-build-opencl docker-push-opencl
 
 dbnp-all: dbnp-cuda dbnp-opencl docker-push
