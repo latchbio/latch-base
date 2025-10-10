@@ -12,8 +12,10 @@ docker_image_name_cuda := "latch-base-cuda"
 docker_image_name_cuda12 := "latch-base-cuda12"
 docker_image_name_opencl := "latch-base-opencl"
 
-docker_image_name_nextflow := "latch-base-nextflow"
-docker_image_version_nextflow := env_var_or_default("LATCH_NEXTFLOW_VERSION", "v1.1.5")
+nextflow_version := env_var_or_default("NEXTFLOW_VERSION", "25.04.8")
+nextflow_latch_version := env_var_or_default("LATCH_NEXTFLOW_VERSION", "v1.1.5")
+
+docker_image_name_nextflow := "latch-base-nextflow" + "/" + nextflow_version
 
 docker_registry := "812206152185.dkr.ecr.us-west-2.amazonaws.com"
 docker_image_version := git_hash + "-" + git_branch
@@ -57,10 +59,15 @@ docker-push-opencl:
 dbnp-opencl: docker-build-opencl docker-push-opencl
 
 docker-build-nextflow:
-  docker build --platform linux/amd64 -t {{docker_registry}}/{{docker_image_name_nextflow}}:{{docker_image_version_nextflow}} --build-arg="nextflow_version={{docker_image_version_nextflow}}" -f Dockerfile.nextflow .
+  docker build \
+    --platform linux/amd64 \
+    -t {{docker_registry}}/{{docker_image_name_nextflow}}:{{nextflow_latch_version}} \
+    --build-arg="nextflow_version={{nextflow_version}}" \
+    --build-arg="nextflow_latch_version={{nextflow_latch_version}}" \
+    -f Dockerfile.nextflow .
 
 docker-push-nextflow:
-  docker push {{docker_registry}}/{{docker_image_name_nextflow}}:{{docker_image_version_nextflow}}
+  docker push {{docker_registry}}/{{docker_image_name_nextflow}}:{{nextflow_latch_version}}
 
 dbnp-nextflow: docker-build-nextflow docker-push-nextflow
 

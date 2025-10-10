@@ -1,6 +1,7 @@
 from 812206152185.dkr.ecr.us-west-2.amazonaws.com/latch-base:cb86-main
 
 arg nextflow_version
+arg nextflow_latch_version
 
 run <<deps
     apt-get update
@@ -9,7 +10,7 @@ deps
 
 run <<download
     nextflow_v2_dir="https://latch-public.s3.us-west-2.amazonaws.com/nextflow-v2"
-    download_dir="${nextflow_v2_dir}/${nextflow_version}"
+    download_dir="${nextflow_v2_dir}/${nextflow_version}/${nextflow_latch_version}"
 
     curl -sSL $download_dir/nextflow.tar.gz -o /root/nextflow.tar.gz
     tar -xvzf /root/nextflow.tar.gz
