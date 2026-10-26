@@ -26,6 +26,27 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONPATH /root
 ENV LATCH_AUTHENTICATION_ENDPOINT https://nucleus.latch.bio
 
+# note(anirudh): excluding in ca-certificates.conf survives later ca-certificates upgrades (DSA-6572-1)
+RUN <<'CA'
+    set -eu
+    apt-get update
+    apt-get install --no-install-recommends -y ca-certificates
+    sed -i \
+        -e '/^mozilla\/emSign_ECC_Root_CA_-_G3.crt$/s/^/!/' \
+        -e '/^mozilla\/Comodo_AAA_Services_root.crt$/s/^/!/' \
+        /etc/ca-certificates.conf
+    update-ca-certificates --fresh
+CA
+
+# note(anirudh): --cert keeps the old pip's vendored certifi out of the bootstrap download
+RUN <<'PIP'
+    set -eu
+    python -m pip install --disable-pip-version-check --no-deps --no-cache-dir \
+        --cert /etc/ssl/certs/ca-certificates.crt --upgrade \
+        "https://files.pythonhosted.org/packages/3f/06/3e4420302363fbb71be3c7f35ce042f54bfca330e3e66b3a2e3c4cca579f/pip-26.2.2-py3-none-any.whl#sha256=fd7f4dfa8190e014013b9f08f3e973f4e4c26ffd179a204895533a7254813a70"
+    python -m pip install --no-cache-dir "certifi==2026.10.19"
+PIP
+
 RUN apt-get update && apt-get install -y libsm6 libxext6 libxrender-dev build-essential procps rsync openssh-server
 
 # Install the AWS cli separately to prevent issues with boto being written over
@@ -72,3 +93,6 @@ DOCKER
 RUN mv /usr/bin/docker /usr/bin/_docker
 COPY scripts/docker.sh /usr/bin/docker
 RUN chmod u+x /usr/bin/docker
+
+COPY scripts/check_ca.py /usr/local/share/latch/check_ca.py
+RUN python /usr/local/share/latch/check_ca.py

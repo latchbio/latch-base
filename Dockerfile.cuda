@@ -11,6 +11,18 @@ env LC_ALL C.UTF-8
 env PYTHONPATH /root
 env DEBIAN_FRONTEND noninteractive
 
+# note(anirudh): excluding in ca-certificates.conf survives later ca-certificates upgrades (DSA-6572-1)
+run <<'CA'
+    set -eu
+    apt-get update
+    apt-get install --no-install-recommends -y ca-certificates
+    sed -i \
+        -e '/^mozilla\/emSign_ECC_Root_CA_-_G3.crt$/s/^/!/' \
+        -e '/^mozilla\/Comodo_AAA_Services_root.crt$/s/^/!/' \
+        /etc/ca-certificates.conf
+    update-ca-certificates --fresh
+CA
+
 run apt-get update && \
     apt-get install -y \
         software-properties-common \
@@ -30,7 +42,14 @@ run add-apt-repository -y ppa:deadsnakes/ppa && \
         python3.11-dev \
         python3-pip
 
-run python3.11 -m pip install --upgrade pip
+# note(anirudh): --cert keeps the old pip's vendored certifi out of the bootstrap download
+run <<'PIP'
+    set -eu
+    python3.11 -m pip install --disable-pip-version-check --no-deps --no-cache-dir \
+        --cert /etc/ssl/certs/ca-certificates.crt --upgrade \
+        "https://files.pythonhosted.org/packages/3f/06/3e4420302363fbb71be3c7f35ce042f54bfca330e3e66b3a2e3c4cca579f/pip-26.2.2-py3-none-any.whl#sha256=fd7f4dfa8190e014013b9f08f3e973f4e4c26ffd179a204895533a7254813a70"
+    python3.11 -m pip install --no-cache-dir "certifi==2026.10.19"
+PIP
 
 # Install the AWS cli separately to prevent issues with boto being written over
 run python3.11 -m pip install awscli
@@ -43,3 +62,6 @@ run curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_L
 
 copy in_container.mk /root/Makefile
 copy flytekit.config /root
+
+copy scripts/check_ca.py /usr/local/share/latch/check_ca.py
+run python3.11 /usr/local/share/latch/check_ca.py && python3 /usr/local/share/latch/check_ca.py
