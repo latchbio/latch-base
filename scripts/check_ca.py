@@ -64,10 +64,12 @@ def default_roots():
 
 stores = [("os bundle", OS_BUNDLE)]
 failures = []
+have_certifi = False
 
 try:
     import certifi
 
+    have_certifi = True
     stores.append(("certifi %s" % certifi.__version__, certifi.where()))
     # note(anirudh): distro-patched certifi and pip return the OS bundle; only a vendored copy needs the fixed release
     if sys.version_info >= (3, 7) and not is_os_bundle(certifi.where()) and version_tuple(certifi.__version__) < MIN_CERTIFI:
@@ -85,7 +87,8 @@ try:
 except ImportError:
     pass
 
-for module_name in ("botocore", "awscli.botocore"):
+# note(anirudh): botocore only reads its bundled cacert.pem when certifi is not importable
+for module_name in () if have_certifi else ("botocore", "awscli.botocore"):
     try:
         module = __import__(module_name, fromlist=["__file__"])
     except ImportError:

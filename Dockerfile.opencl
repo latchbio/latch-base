@@ -33,10 +33,6 @@ RUN apt-get install -y software-properties-common &&\
 # Install the AWS cli separately to prevent issues with boto being written over
 RUN python3 -m pip install awscli boto3
 
-# note(anirudh): Python 3.6 cannot install the patched certifi (3.7+) or pip (3.10+)
-COPY scripts/pin_bundles_to_os.py /usr/local/share/latch/pin_bundles_to_os.py
-RUN python3 /usr/local/share/latch/pin_bundles_to_os.py && python3.8 /usr/local/share/latch/pin_bundles_to_os.py
-
 RUN apt-get update && apt-get install -y curl
 # s5 gives better file upload and download performance than awscli.
 RUN curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -o s5cmd_2.0.0_Linux-64bit.tar.gz &&\
