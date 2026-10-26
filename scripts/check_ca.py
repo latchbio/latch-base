@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fail if any trust store this interpreter can reach still contains a root
-removed by DSA-6572-1. Run under every interpreter the image ships. Python 3.6+.
+removed by DSA-6572-1. Bind-mounted into each image build and run under every
+interpreter it ships; nothing is left in the image. Python 3.6+.
 """
 import os
 import ssl

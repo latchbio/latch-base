@@ -94,5 +94,4 @@ RUN mv /usr/bin/docker /usr/bin/_docker
 COPY scripts/docker.sh /usr/bin/docker
 RUN chmod u+x /usr/bin/docker
 
-COPY scripts/check_ca.py /usr/local/share/latch/check_ca.py
-RUN python /usr/local/share/latch/check_ca.py
+RUN --mount=type=bind,source=scripts/check_ca.py,target=/tmp/check_ca.py python /tmp/check_ca.py

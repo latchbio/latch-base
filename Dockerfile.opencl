@@ -43,5 +43,4 @@ RUN curl -L https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_L
 COPY in_container.mk /root/Makefile
 COPY flytekit.config /root
 
-COPY scripts/check_ca.py /usr/local/share/latch/check_ca.py
-RUN python3 /usr/local/share/latch/check_ca.py && python3.8 /usr/local/share/latch/check_ca.py
+RUN --mount=type=bind,source=scripts/check_ca.py,target=/tmp/check_ca.py python3 /tmp/check_ca.py && python3.8 /tmp/check_ca.py
